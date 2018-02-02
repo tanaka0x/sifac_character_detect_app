@@ -13,7 +13,7 @@ const TemplateWrapper = ({ children }) => (
 
       ]}
     />
-    <Header />
+    <Header title='プロカにうつってる人見つけるやつ'/>
     <div
       style={{
         margin: '0 auto',

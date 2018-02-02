@@ -6,13 +6,12 @@ function resize(canvas, src, minWidth, minHeight) {
       let scale = 1.0
       if (this.width < minWidth || this.height < minHeight) {
         // scale === 1.0
-              
       } else if (this.width > this.height) {
         scale = minHeight / this.height
-              
       } else if (this.width < this.height) {
         scale = minWidth / this.width
-              
+      } else if (this.width > minWidth) {
+        scale = minWidth / this.width
       }
 
       const originalWidth = this.width

@@ -1,4 +1,4 @@
-import {api_root} from './const'
+const api_root = require('./const').api_root // import doesn't always work
 
 export default function post(imgDataURI) {
   const body = JSON.stringify({
@@ -11,8 +11,12 @@ export default function post(imgDataURI) {
   }
   
   return fetch(api_root + '/images', {
-    method: 'POST', headers, body
-  }).then((res) => res.json()).catch((error) => {
-    return {error}
+    method: 'POST', headers, body, mode: 'cors'
+  }).then((res) => {
+    if (res.status === 200 || res.status >= 400) {
+      return res.json()
+    } else {
+      return { error: res.status }
+    }
   })
 }
