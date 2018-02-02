@@ -79,7 +79,10 @@ def _adjust_inference(result, img_shape, threshold=0.7):
 def inference(bytes_from_req: bytes) -> List[Dict[str, Any]]:
     bytesio = io.BytesIO(bytes_from_req)
     img = Image.open(bytesio)
-    original_shape = img.size
+    if img.mode != 'RGB':
+        img = img.convert('RGB')
+    original_shape = image.img_to_array(img).shape
+
     resized = img.resize(input_shape[:2])
     img_array = image.img_to_array(resized)
 
@@ -87,5 +90,5 @@ def inference(bytes_from_req: bytes) -> List[Dict[str, Any]]:
     preds = model.predict(inputs, batch_size=1)
     results = bbox_util.detection_out(preds)
 
-    return _adjust_inference(results[0], img_shape=original_shape)
+    return _adjust_inference(results[0], img_shape=original_shape, threshold=0.6)
 

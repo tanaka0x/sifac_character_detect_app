@@ -53,8 +53,20 @@ class Images(object):
         res.status = falcon.HTTP_200
 
     def on_post(self, req: falcon.Request, res: falcon.Response) -> None:
-        img = str(req.get_param('img', required=True))
-        mediatype, imgbytes = parse(img)
+        payload = json.loads(req.stream.read())
+
+        if 'img' not in payload:
+            res.status = falcon.HTTP_400
+            res.body = json.dumps({"title": "Missing parameter", "description": "The \"img\" parameter is required."})
+            return
+
+        img = payload['img']
+        try:
+            mediatype, imgbytes = parse(img)
+        except ValueError as e:
+            res.status = falcon.HTTP_400
+            res.body = json.dumps({"title": "Invalid \"img\" parameter", "description": str(e)})
+            return
 
         started = time.time()
         result = self.infer_fn(imgbytes)
